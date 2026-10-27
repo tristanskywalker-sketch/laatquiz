@@ -1,4 +1,4 @@
-# LåtQuiz – versjon 1.1
+# LåtQuiz – versjon 1.2
 
 En mobiltilpasset musikkquiz som fungerer som statisk nettside. Ingen installasjon, brukerregistrering, Spotify-API eller server kreves.
 
@@ -22,11 +22,15 @@ Du kan også åpne `index.html` direkte i en nettleser uten å publisere den. En
 - Quizen lagres lokalt i nettleseren, også dersom du bytter til Spotify og kommer tilbake.
 - Utvalg prioriterer låter du ikke har fått i nylige quizer. Ingen innlogging.
 
-## Oppdater fra versjon 1.0
+## Oppdater fra tidligere versjoner
 
-Bare last opp de oppdaterte `app.js`, `data.js`, `style.css` og `README.md` til samme GitHub-repository og erstatt de eksisterende filene. `index.html` og `favicon.svg` er uendret og kan også lastes opp igjen om ønskelig. Eksisterende quizer fungerer fortsatt fordi sangenes ID-er er beholdt.
+Last opp **alle seks filene** og erstatt de eksisterende i GitHub-repositoryet. Ikke opprett et nytt repository. GitHub Pages vil publisere versjon 1.2 automatisk etter commit.
 
-Alle 90 tilleggsspørsmål er gjennomgått for direkte avsløring av artisten eller gruppen. Spørsmål og svar kan enkelt redigeres i `data.js`.
+**Rettet i v1.2:** Selv om spørsmålene i v1.1 ikke nevnte artisten direkte, ble både artisten og sangtittelen vist i låtkortet før fasiten. Nå vises de først etter «Vis begge svarene». Spørsmålsknappene viser heller ikke sangtittel i tilgjengelighetsnavnet. Filer lastes inn med `?v=1.2` slik at nettleseren ikke skal bruke foreldet JavaScript/CSS fra hurtigbufferen. Versjonsnummeret v1.2 står nederst på nettsiden.
+
+**Merk:** Spotify-appen og Spotify-søket viser fortsatt sangtittel og artist. La derfor ikke deltakerne se quizmasterens Spotify-skjerm når de skal gjette artist.
+
+Alle 90 låtene og tilleggsspørsmålene fra v1.1 er beholdt.
 
 ## Merk om musikklenkene
 

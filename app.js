@@ -144,7 +144,7 @@
     const selected = state.active>=0 ? songs[state.active] : null;
     const nav=songs.map((s,i)=>{
       const seen=state.visited.includes(i),active=state.active===i;
-      return `<a href="${spotifyUrl(s)}" target="laatquizSpotify" data-action="open-question" data-index="${i}" class="question-tab ${seen?'done':''} ${active?'active':''}" aria-label="Spørsmål ${i+1}: Åpne ${html(s.title)} i Spotify" ${active?'aria-current="step"':''}><span>${pad(i+1)}</span>${seen?'<i aria-hidden="true"></i>':''}</a>`;
+      return `<a href="${spotifyUrl(s)}" target="laatquizSpotify" data-action="open-question" data-index="${i}" class="question-tab ${seen?'done':''} ${active?'active':''}" aria-label="Spørsmål ${i+1}: Åpne låt i Spotify" ${active?'aria-current="step"':''}><span>${pad(i+1)}</span>${seen?'<i aria-hidden="true"></i>':''}</a>`;
     }).join('');
     let content;
     if (state.finished) {
@@ -154,7 +154,9 @@
     } else {
       const revealed=state.revealed.includes(state.active);
       content=`<article class="song-panel"><div class="song-accent"></div><div class="song-head"><span class="eyebrow-label">NÅ SPILLER VI</span><span class="song-index">${pad(state.active+1)} <span>/ ${pad(total)}</span></span></div>
-        <div class="song-main"><div class="song-illustration" aria-hidden="true"><div class="mini-vinyl"><div></div></div><span>${icon('music',23)}</span></div><div class="song-details"><span class="song-caption">KUN FOR QUIZMASTER</span><h2>${html(selected.title)}</h2><p>${html(selected.artist)}</p><span class="year-label">${selected.year}</span></div></div>
+        <div class="song-main"><div class="song-illustration" aria-hidden="true"><div class="mini-vinyl"><div></div></div><span>${icon('music',23)}</span></div><div class="song-details">${revealed
+          ? `<span class="song-caption">LÅTEN VI SPILTE</span><h2>${html(selected.title)}</h2><p>${html(selected.artist)}</p><span class="year-label">${selected.year}</span>`
+          : `<span class="song-caption">LÅT ${pad(state.active+1)} · 2 POENG</span><h2>Hemmelig artist</h2><p>Artist og sangtittel er skjult frem til fasiten vises.</p>`}</div></div>
         <a class="play-link" href="${spotifyUrl(selected)}" target="laatquizSpotify" data-action="open-question" data-index="${state.active}"><span class="play-link-icon">${icon('play',20)}</span><span>${selected.spotifyId?'Åpne låten i Spotify':'Finn låten i Spotify'}</span>${icon('external',18)}</a>
         ${!selected.spotifyId?'<p class="search-note">Denne låten bruker Spotify-søk. Velg riktig innspilling i trefflisten.</p>':''}
       </article>
