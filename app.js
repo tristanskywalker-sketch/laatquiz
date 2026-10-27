@@ -128,7 +128,7 @@
     app.innerHTML=`<section class="setup-intro"><div class="intro-copy"><p class="eyebrow"><span class="eyebrow-line"></span> DIN NESTE MUSIKKQUIZ STARTER HER</p>
       <h1>God musikk.<br><span>Gode spørsmål.</span></h1>
       <p class="intro-desc">Velg stemningen, trekk låter og hold hele quizen fra mobilen. Du spiller musikken – resten fikser vi.</p>
-      <div class="intro-stats"><span>${SONGS.length} låter i banken</span><i></i><span>Ingen innlogging</span></div></div>
+      <div class="intro-stats"><span>${SONGS.length} låter i banken</span><i></i><span>2 poeng per låt</span></div></div>
       <div class="hero-art" aria-hidden="true"><div class="vinyl-ring"><div class="vinyl-disc"><div class="vinyl-label"><div class="vinyl-hole"></div></div></div></div><div class="hero-spark spark-one">✳</div><div class="hero-spark spark-two">✦</div></div></section>
       <section class="setup-panel"><div class="section-heading"><div><span class="section-kicker">STEG 01</span><h2>Velg kategori</h2></div><span class="tiny-info">${categoryDefs.length} alternativer</span></div>
       <div class="genre-grid">${cards}</div>
@@ -136,42 +136,44 @@
       <div class="section-heading count-heading"><div><span class="section-kicker">STEG 02</span><h2>Antall spørsmål</h2></div></div>
       <div class="count-options" role="group" aria-label="Velg antall spørsmål">${[5,10,15].map(n=>`<button type="button" data-action="count" data-value="${n}" class="count-option ${state.count===n?'active':''}" aria-pressed="${state.count===n}">${n}<span>spørsmål</span></button>`).join('')}</div>
       <button type="button" class="cta-button" data-action="create">Lag min quiz <span>${icon('arrow',22)}</span></button>
-      <p class="setup-footnote">${icon('music',16)} Låtene åpnes via vanlige Spotify-lenker. Ingen Spotify-konto kobles til nettsiden.</p></section>
-      <section class="how-panel"><div class="how-icon">${icon('music',22)}</div><div><h3>Slik fungerer det</h3><p>Trykk på et spørsmålsnummer for å åpne låten. Gå tilbake til quizen, les spørsmålet og vis fasiten når dere er klare.</p></div></section>`;
+      <p class="setup-footnote">${icon('music',16)} 2 poeng per låt: artist + tilleggsspørsmål. Låtene åpnes via vanlige Spotify-lenker.</p></section>
+      <section class="how-panel"><div class="how-icon">${icon('music',22)}</div><div><h3>Slik fungerer det</h3><p>Spill sangen, la deltakerne gjette artisten (1 poeng), og les opp tilleggsspørsmålet (1 poeng). Du styrer begge fasitsvarene fra mobilen.</p></div></section>`;
   }
   function renderQuiz() {
     const songs=currentSongs(), total=songs.length, opened=state.visited.length;
     const selected = state.active>=0 ? songs[state.active] : null;
     const nav=songs.map((s,i)=>{
       const seen=state.visited.includes(i),active=state.active===i;
-      return `<a href="${spotifyUrl(s)}" target="_blank" rel="noopener noreferrer" data-action="open-question" data-index="${i}" class="question-tab ${seen?'done':''} ${active?'active':''}" aria-label="Spørsmål ${i+1}: Åpne ${html(s.title)} i Spotify" ${active?'aria-current="step"':''}><span>${pad(i+1)}</span>${seen?'<i aria-hidden="true"></i>':''}</a>`;
+      return `<a href="${spotifyUrl(s)}" target="laatquizSpotify" data-action="open-question" data-index="${i}" class="question-tab ${seen?'done':''} ${active?'active':''}" aria-label="Spørsmål ${i+1}: Åpne ${html(s.title)} i Spotify" ${active?'aria-current="step"':''}><span>${pad(i+1)}</span>${seen?'<i aria-hidden="true"></i>':''}</a>`;
     }).join('');
     let content;
     if (state.finished) {
       content=`<div class="end-card"><div class="end-icon">✳</div><p class="section-kicker">FERDIG!</p><h2>For en låtliste.</h2><p>Du har kommet til slutten av quizen. Kjør en runde til med nye spørsmål, eller gå tilbake og åpne en av låtene på nytt.</p><button type="button" class="cta-button" data-action="create">Lag ny quiz ${icon('arrow',22)}</button><button type="button" class="text-button" data-action="finish-back">Tilbake til spørsmålene</button></div>`;
     } else if (!selected) {
-      content=`<div class="empty-card"><div class="empty-disc">${icon('play',33)}</div><span class="section-kicker">KLAR FOR FØRSTE LÅT?</span><h2>Velg et nummer<br>for å starte.</h2><p>Når du trykker på et spørsmål, åpnes sangen i Spotify. Gå deretter tilbake hit for å lese spørsmålet.</p><a href="${spotifyUrl(songs[0])}" target="_blank" rel="noopener noreferrer" class="cta-button" data-action="open-question" data-index="0">Åpne spørsmål 01 ${icon('arrow',22)}</a></div>`;
+      content=`<div class="empty-card"><div class="empty-disc">${icon('play',33)}</div><span class="section-kicker">KLAR FOR FØRSTE LÅT?</span><h2>Velg et nummer<br>for å starte.</h2><p>Når du trykker på et spørsmål, åpnes sangen i Spotify. Gå deretter tilbake hit for å lese spørsmålet.</p><a href="${spotifyUrl(songs[0])}" target="laatquizSpotify" class="cta-button" data-action="open-question" data-index="0">Åpne spørsmål 01 ${icon('arrow',22)}</a></div>`;
     } else {
       const revealed=state.revealed.includes(state.active);
       content=`<article class="song-panel"><div class="song-accent"></div><div class="song-head"><span class="eyebrow-label">NÅ SPILLER VI</span><span class="song-index">${pad(state.active+1)} <span>/ ${pad(total)}</span></span></div>
-        <div class="song-main"><div class="song-illustration" aria-hidden="true"><div class="mini-vinyl"><div></div></div><span>${icon('music',23)}</span></div><div class="song-details"><span class="song-caption">QUIZMASTERS LÅT</span><h2>${html(selected.title)}</h2><p>${html(selected.artist)}</p><span class="year-label">${selected.year}</span></div></div>
-        <a class="play-link" href="${spotifyUrl(selected)}" target="_blank" rel="noopener noreferrer" data-action="open-question" data-index="${state.active}"><span class="play-link-icon">${icon('play',20)}</span><span>${selected.spotifyId?'Åpne låten i Spotify':'Finn låten i Spotify'}</span>${icon('external',18)}</a>
+        <div class="song-main"><div class="song-illustration" aria-hidden="true"><div class="mini-vinyl"><div></div></div><span>${icon('music',23)}</span></div><div class="song-details"><span class="song-caption">KUN FOR QUIZMASTER</span><h2>${html(selected.title)}</h2><p>${html(selected.artist)}</p><span class="year-label">${selected.year}</span></div></div>
+        <a class="play-link" href="${spotifyUrl(selected)}" target="laatquizSpotify" data-action="open-question" data-index="${state.active}"><span class="play-link-icon">${icon('play',20)}</span><span>${selected.spotifyId?'Åpne låten i Spotify':'Finn låten i Spotify'}</span>${icon('external',18)}</a>
         ${!selected.spotifyId?'<p class="search-note">Denne låten bruker Spotify-søk. Velg riktig innspilling i trefflisten.</p>':''}
       </article>
-      <article class="question-card"><div class="question-card-top"><span class="eyebrow-label">SPØRSMÅLET</span><span class="question-bubble">?</span></div><h2>${html(selected.question)}</h2>
-      <div class="answer-wrap ${revealed?'visible':''}">${revealed?`<p class="answer-label">${icon('check',18)} FASIT</p><p class="answer-text">${html(selected.answer)}</p>`:''}</div>
-      <button type="button" class="answer-button" data-action="answer" aria-expanded="${revealed}">${icon(revealed?'close':'eye',19)} ${revealed?'Skjul fasit':'Vis fasit'}</button></article>
+      <article class="question-card"><div class="question-card-top"><span class="eyebrow-label">TO MULIGE POENG</span><span class="question-bubble">2</span></div>
+        <div class="quiz-question-one"><span class="question-step-label">1 POENG · ARTIST</span><h3>Hvilken artist eller gruppe hører vi?</h3></div>
+        <div class="quiz-question-two"><span class="question-step-label">1 POENG · TILLEGGS­SPØRSMÅL</span><h2>${html(selected.question)}</h2></div>
+        <div class="answer-wrap ${revealed?'visible':''}">${revealed?`<p class="answer-label">${icon('check',18)} FASIT · MAKS 2 POENG</p><p class="answer-text"><span>Artist / gruppe</span>${html(selected.artist)}</p><p class="answer-text answer-extra"><span>Tilleggsspørsmål</span>${html(selected.answer)}</p>`:''}</div>
+        <button type="button" class="answer-button" data-action="answer" aria-expanded="${revealed}">${icon(revealed?'close':'eye',19)} ${revealed?'Skjul fasit':'Vis begge svarene'}</button></article>
       <div class="quiz-actions"><button type="button" class="secondary-button" data-action="replace">${icon('shuffle',17)} Bytt låt</button>${state.active<total-1
-        ?`<a href="${spotifyUrl(songs[state.active+1])}" target="_blank" rel="noopener noreferrer" class="next-button" data-action="open-question" data-index="${state.active+1}">Neste spørsmål ${icon('arrow',18)}</a>`
+        ?`<a href="${spotifyUrl(songs[state.active+1])}" target="laatquizSpotify" class="next-button" data-action="open-question" data-index="${state.active+1}">Neste spørsmål ${icon('arrow',18)}</a>`
         :`<button type="button" class="next-button" data-action="finish">Avslutt quiz ${icon('check',18)}</button>`}</div>`;
     }
     app.innerHTML=`<section class="quiz-layout"><div class="quiz-topline"><button type="button" class="back-button" data-action="home">${icon('back',17)} Oppsett</button><span class="quiz-top-chip">${html(cat().name)}</span></div>
-      <div class="quiz-title-row"><div><p class="section-kicker">DIN MUSIKKQUIZ</p><h1>La musikken spille<span class="title-period">.</span></h1></div><button type="button" class="circle-button" data-action="restart" aria-label="Lag en helt ny quiz" title="Ny tilfeldig quiz">${icon('refresh',21)}</button></div>
+      <div class="quiz-title-row"><div><p class="section-kicker">DIN MUSIKKQUIZ · MAKS ${total*2} POENG</p><h1>La musikken spille<span class="title-period">.</span></h1></div><button type="button" class="circle-button" data-action="restart" aria-label="Lag en helt ny quiz" title="Ny tilfeldig quiz">${icon('refresh',21)}</button></div>
       <div class="progress-block"><div class="progress-caption"><span>${opened} av ${total} spørsmål åpnet</span><strong>${Math.round(opened/total*100)} %</strong></div><div class="progress-track" role="progressbar" aria-label="Fremdrift" aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${opened}"><span style="width:${opened/total*100}%"></span></div></div>
       <div class="question-nav-head"><span>VELG SPØRSMÅL</span><span>${icon('list',16)} Trykk for å åpne låt</span></div>
       <nav class="question-nav" aria-label="Quiz-spørsmål">${nav}</nav>
       <div class="question-stage">${content}</div>
-      <p class="quiz-bottom-tip">Tips: Har Spotify åpnet seg? Gå tilbake til nettleseren for å lese spørsmålet. Musikken kan fortsette i bakgrunnen.</p></section>`;
+      <p class="quiz-bottom-tip">Spotify: På laptop gjenbrukes normalt samme Spotify-fane. På mobil kan lenkene åpne Spotify-appen. Gå tilbake til LåtQuiz for å lese spørsmålet.</p></section>`;
   }
   function render() {
     if (state.screen==='quiz' && state.quizIds.length) renderQuiz(); else renderSetup();
