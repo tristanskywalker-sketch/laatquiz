@@ -1,49 +1,32 @@
-# LåtQuiz – versjon 1.2
+# LåtQuiz – versjon 1.3
 
-En mobiltilpasset musikkquiz som fungerer som statisk nettside. Ingen installasjon, brukerregistrering, Spotify-API eller server kreves.
+Mobiltilpasset musikkquiz for én quizmaster. Ingen Spotify-API, server eller innlogging er nødvendig.
 
-## Publiser via GitHub Pages
+## Oppdatert spørsmålsbank
 
-1. Lag et **nytt, offentlig GitHub-repository** (for eksempel `laatquiz`).
-2. Last opp **alle filene i denne mappen til roten** av repositoryet: `index.html`, `style.css`, `app.js`, `data.js` og `favicon.svg`.
-3. Gå til **Settings → Pages** i GitHub-repositoryet.
-4. Velg **Deploy from a branch**, `main`, og `/ (root)`. Lagre.
-5. Åpne URL-en GitHub Pages oppgir. Nettsiden fungerer på mobil.
+- **354 låter totalt** (tidligere 90), med ett tilleggsspørsmål og fasit til hver låt.
+- **112 låter fra 90-tallet** og **135 fra 2000–2009**.
+- **52 norske partylåter**, blant annet Staysman & Lazz, TIX, Freddy Kalas, Katastrofe, Hagle, Ringnes-Ronny og Ballinciaga.
+- Nye kategorier: **2000-tallet** og **Partymusikk**. Fortsatt country, pop, rock, 80-tallet, 90-tallet, norsk og litt av alt.
+- Maks **2 poeng per låt** (artist + tilleggsspørsmål). Navn og tittel skjules til fasit vises.
+- Artistspredning ved uttrekk, slik at du normalt slipper flere låter fra samme hovedartist i én quiz.
 
-Du kan også åpne `index.html` direkte i en nettleser uten å publisere den. Enkelte mobilnettlesere krever publisering for å håndtere eksterne Spotify-lenker smidig.
+## Oppdatere GitHub Pages
 
-## Funksjoner
+1. Pakk ut ZIP-filen. Du finner seks filer: `index.html`, `app.js`, `data.js`, `style.css`, `favicon.svg`, `README.md`.
+2. Gå til **samme GitHub-repository** du bruker i dag (`laatquiz`).
+3. Velg **Add file → Upload files** og last opp alle seks filene. Erstatt filene med samme navn.
+4. Trykk **Commit changes**. GitHub Pages publiserer automatisk. Du trenger ikke opprette repository på nytt.
+5. Åpne siden på nytt, helst med en hard oppdatering om den viser gamle filer. Versjonsnummeret nederst skal være **v1.3**.
 
-- Country, pop, rock, 80-tallet, 90-tallet, norsk musikk og litt av alt.
-- 5, 10 eller 15 tilfeldig valgte spørsmål.
-- To poeng per låt (1 for artist, 1 for tilleggsspørsmål), skjult fasit til begge, neste spørsmål og bytte av enkeltlåt.
-- 90 redigerbare låter, med spørsmål og svar i `data.js`.
-- Vanlige lenker som åpnes i Spotify. På laptop forsøker nettleseren å gjenbruke samme Spotify-fane i stedet for å opprette en ny for hver låt. Verifisert låt-ID brukes der den finnes; ellers Spotify-søk etter artist og tittel.
-- Quizen lagres lokalt i nettleseren, også dersom du bytter til Spotify og kommer tilbake.
-- Utvalg prioriterer låter du ikke har fått i nylige quizer. Ingen innlogging.
+## Spotify-lenker
 
-## Oppdater fra tidligere versjoner
+De opprinnelige direkte Spotify-låtlenkene er beholdt. **Nye låter åpner et vanlig Spotify-søk** etter artist og sangtittel; velg riktig låt i trefflisten. Søkelenker er brukt bevisst for ikke å legge inn uverifiserte Spotify-låt-ID-er. Med tiden kan du legge til direkte Spotify-ID-er i `data.js` uten å endre appen.
 
-Last opp **alle seks filene** og erstatt de eksisterende i GitHub-repositoryet. Ikke opprett et nytt repository. GitHub Pages vil publisere versjon 1.2 automatisk etter commit.
+Vanlige Spotify-lenker kan åpne en fane eller Spotify-appen. Det er ikke garantert at avspilling starter av seg selv, og Spotify viser artist og tittel i sin egen app.
 
-**Rettet i v1.2:** Selv om spørsmålene i v1.1 ikke nevnte artisten direkte, ble både artisten og sangtittelen vist i låtkortet før fasiten. Nå vises de først etter «Vis begge svarene». Spørsmålsknappene viser heller ikke sangtittel i tilgjengelighetsnavnet. Filer lastes inn med `?v=1.2` slik at nettleseren ikke skal bruke foreldet JavaScript/CSS fra hurtigbufferen. Versjonsnummeret v1.2 står nederst på nettsiden.
+## Videre utvidelser
 
-**Merk:** Spotify-appen og Spotify-søket viser fortsatt sangtittel og artist. La derfor ikke deltakerne se quizmasterens Spotify-skjerm når de skal gjette artist.
+Alle sangene ligger som enkle oppføringer i `data.js` (`id`, `artist`, `title`, `year`, `genres`, `question`, `answer`, valgfri `spotifyId`). Flere sanger kan legges til når som helst uten endring av selve nettsiden. `90-tallet` og `2000-tallet` sorteres på årstall, mens `Partymusikk` bruker sjangermerket `party`.
 
-Alle 90 låtene og tilleggsspørsmålene fra v1.1 er beholdt.
-
-## Merk om musikklenkene
-
-For en låt med `spotifyId` går lenken direkte til `https://open.spotify.com/track/<spotifyId>`. Hvorvidt avspillingen starter automatisk avhenger av Spotify-appen, mobilen og avspillingsstatus. Enkelte nettlesere kan likevel åpne en ny fane eller overføre deg til Spotify-appen; dette kan ikke styres fullt ut fra en vanlig nettlenke. For øvrige låter åpnes et Spotify-søk – velg riktig innspilling manuelt. Låtlenker kan slutte å virke eller gi regionbegrensninger; de må vedlikeholdes ved behov.
-
-Du kan legge inn flere eksakte Spotify-lenker: Åpne låten i Spotify → Del → Kopier lenke. Kopier delen mellom `/track/` og `?` til feltet `spotifyId` for den aktuelle sangen i `data.js`.
-
-## Tilpass låtene
-
-Hvert element i `SONGS` i `data.js` har: `id`, `artist`, `title`, `year`, `genres`, `question`, `answer` og eventuelt `spotifyId`. Kategorien `80-tallet` og `90-tallet` bestemmes automatisk av `year`. For øvrige kategorier brukes `genres`.
-
-Legg til nye elementer med unike id-er. Kontroller fakta i spørsmålene, og ikke skriv artistens eller gruppens navn i spørsmålet – deltakerne skal først gjette artisten for ett poeng. Hele appen kjører kun lokalt i browseren; ingen opplysninger eller quizer sendes til en server.
-
-## Viktig
-
-Denne nettsiden er et uavhengig hobbyprosjekt og er ikke laget eller godkjent av Spotify. Det brukes ingen Spotify-API-er, embedded avspillere eller Spotify-strømmer i appen. Låtene spilles i Spotify på brukerens eget abonnement. Spotify kan begrense avspilling og den enkelte brukeren må følge Spotifys vilkår, inkludert begrensningen mot offentlig/kommersiell avspilling.
+Den er laget som et uavhengig hobbyprosjekt og er ikke tilknyttet Spotify. Offentlig eller kommersiell musikkavspilling kan kreve egne rettigheter.

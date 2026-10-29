@@ -8,8 +8,10 @@
     {id:'pop', name:'Pop', note:'Hits alle kjenner', sign:'♫', tint:'pink'},
     {id:'rock', name:'Rock', note:'Gitarer & legender', sign:'⚡', tint:'blue'},
     {id:'80', name:'80-tallet', note:'Synth & store refreng', sign:'80', tint:'purple'},
-    {id:'90', name:'90-tallet', note:'Nostalgi på fullt', sign:'90', tint:'orange'},
-    {id:'norsk', name:'Norsk musikk', note:'Fra a-ha til Karpe', sign:'NO', tint:'mint'},
+    {id:'90', name:'90-tallet', note:'Eurodance, pop & rock', sign:'90', tint:'orange'},
+    {id:'00', name:'2000-tallet', note:'Hits fra 2000–2009', sign:'00', tint:'blue'},
+    {id:'norsk', name:'Norsk musikk', note:'Norske klassikere & hits', sign:'NO', tint:'mint'},
+    {id:'party', name:'Partymusikk', note:'Staysman, TIX & fest', sign:'✺', tint:'pink'},
     {id:'alle', name:'Litt av alt', note:'Alle kategorier', sign:'✳', tint:'lime'},
   ];
 
@@ -39,8 +41,10 @@
   const poolFor = category => SONGS.filter(s => category === 'alle' ||
     (category === '80' && s.year >= 1980 && s.year <= 1989) ||
     (category === '90' && s.year >= 1990 && s.year <= 1999) ||
+    (category === '00' && s.year >= 2000 && s.year <= 2009) ||
     s.genres.includes(category));
   const currentSongs = () => state.quizIds.map(id => SONGS.find(s => s.id === id));
+  const mainArtist = song => song.artist.split(/\s+(?:feat\.?|ft\.?|presents)\s+/i)[0].toLocaleLowerCase('nb');
   const cat = () => categoryDefs.find(c => c.id === state.category) || categoryDefs[0];
   const icon = (name, size=20) => {
     const paths = {
@@ -70,9 +74,9 @@
     const selected=[], artists=new Set();
     for (const item of [...fresh,...older]) {
       if (selected.length === count) break;
-      if (!artists.has(item.artist.toLocaleLowerCase('nb'))) {
+      if (!artists.has(mainArtist(item))) {
         selected.push(item);
-        artists.add(item.artist.toLocaleLowerCase('nb'));
+        artists.add(mainArtist(item));
       }
     }
     for (const item of [...fresh,...older]) {
@@ -122,7 +126,7 @@
       const active=state.category===c.id;
       return `<button type="button" class="genre-card genre-${c.tint} ${active?'selected':''}" data-action="category" data-value="${c.id}" aria-pressed="${active}">
         <span class="genre-card-top"><span class="genre-mark">${c.sign}</span><span class="genre-indicator">${active?icon('check',14):''}</span></span>
-        <span class="genre-name">${c.name}</span><span class="genre-note">${c.note}</span>
+        <span class="genre-name">${c.name}</span><span class="genre-note">${c.note}</span><span class="genre-note">${poolFor(c.id).length} låter</span>
       </button>`;
     }).join('');
     app.innerHTML=`<section class="setup-intro"><div class="intro-copy"><p class="eyebrow"><span class="eyebrow-line"></span> DIN NESTE MUSIKKQUIZ STARTER HER</p>
